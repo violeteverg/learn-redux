@@ -1,4 +1,11 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deposit,
+  withdraw,
+  payloan,
+  requestLoan,
+} from "../../redux/slices/accountSlices";
 
 export default function AccountOperations() {
   const [depositAmount, setDepositAmount] = useState("");
@@ -6,18 +13,44 @@ export default function AccountOperations() {
   const [loanAmount, setLoanAmount] = useState("");
   const [loanPurpose, setLoanPurpose] = useState("");
   const [currency, setCurrency] = useState("USD");
+  const dispatch = useDispatch();
+  const test = useSelector((state) => state.account.balance);
 
-  function handleDeposit() {}
+  const {
+    loan: currentLoan,
+    loanPurpose: currentLoanPurpose,
+    balance,
+    isLoading,
+  } = useSelector((state) => state.account);
 
-  function handleWithdrawal() {}
+  function handleDeposit() {
+    if (!depositAmount) return;
+    dispatch(deposit(depositAmount, currency));
+    setCurrency("USD");
+    setDepositAmount("");
+    console.log(test);
+  }
 
-  function handleRequestLoan() {}
+  function handleWithdrawal() {
+    if (!withdrawalAmount) return;
+    dispatch(withdraw(withdrawalAmount));
+    setWithdrawalAmount("");
+  }
 
-  function handlePayLoan() {}
+  function handleRequestLoan() {
+    if (!loanAmount || !loanPurpose) return;
+    dispatch(requestLoan(loanAmount, loanPurpose));
+    setLoanAmount("");
+    setLoanPurpose("");
+  }
+
+  function handlePayLoan() {
+    dispatch(payloan());
+  }
 
   return (
-    <div>
-      <h2>Your account operations</h2>
+    <div className="mt-8">
+      <h2 className="text-4xl">Your account operations</h2>
       <div className="bg-blue-200 p-8 rounded-lg ">
         <div className="px-[8px]">
           <label className="text-xl">Deposit</label>
@@ -84,15 +117,19 @@ export default function AccountOperations() {
           </button>
         </div>
 
-        <div className="my-2">
-          <span className="text-xl mx-2">Pay back $X</span>
-          <button
-            onClick={handlePayLoan}
-            className="px-[6px] py-[2px] rounded-md bg-blue-500"
-          >
-            Pay loan
-          </button>
-        </div>
+        {currentLoan > 0 && (
+          <div className="my-2">
+            <span className="text-xl mx-2">
+              Pay back {currentLoan} {currentLoanPurpose}
+            </span>
+            <button
+              onClick={handlePayLoan}
+              className="px-[6px] py-[2px] rounded-md bg-blue-500"
+            >
+              Pay loan
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

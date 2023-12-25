@@ -51,9 +51,12 @@ export function deposit(amount, currency) {
     const res = await fetch(
       `https://api.frankfurter.app/latest?amount=${amount}&from=${currency}&to=USD`
     );
-    const data = await res.json;
-    const consverted = data.rates.USD;
+    const data = await res.json();
+    const converted = data.rates.USD;
 
-    dispatch({ type: "account/deposit", payload: consverted });
+    dispatch({ type: "account/deposit", payload: converted });
   };
 }
+
+export const { withdraw, payloan, requestLoan } = accountSlices.actions;
+export default accountSlices.reducer;
