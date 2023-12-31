@@ -71,11 +71,13 @@ function AccountOperations() {
             <option value="EUR">Euro</option>
             <option value="GBP">British Pound</option>
           </select>
+
           <button
             onClick={handleDeposit}
             className={`px-[6px] py-[2px] rounded-md bg-blue-500`}
+            disabled={isLoading}
           >
-            Deposit {depositAmount}
+            {isLoading ? "converting..." : `deposit`}
           </button>
         </div>
 
